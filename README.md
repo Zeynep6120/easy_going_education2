@@ -3,7 +3,7 @@
 Kısa: Basit CRUD örneği — frontend (HTML/JS/SCSS) ve backend (Express + PostgreSQL).
 
 Kurulum
-1. Kopyala `.env.example` → `.env` ve `PG_CONNECTION` değerini güncelleyin.
+1. Kopyala `.env.example` → `.env` ve `DATABASE_URL` veya `PG_CONNECTION` değerini güncelleyin.
 2. Bağımlılıkları yükleyin:
 
 ```bash
@@ -39,6 +39,25 @@ API
 - `GET /api/items` — öğe listesini alır
 - `POST /api/items` — { title, description } ile yeni öğe ekler
 - `DELETE /api/items/:id` — öğe siler
+
+Local (DB yoksa) fallback
+- Proje, Postgres bağlanamazsa otomatik olarak bellek içi (in-memory) fallback moduna geçer ve örnek veriler döner.
+
+Kısa kullanım komutları
+- Sunucuyu arka planda başlatıp logları takip etmek:
+```bash
+# arka planda başlat
+nohup npm start > /tmp/ege_server.log 2>&1 & echo $! > /tmp/ege_server.pid
+
+# logları izlemek
+tail -f /tmp/ege_server.log
+```
+
+- Basit API testleri:
+```bash
+curl http://localhost:3000/api/items
+curl -X POST http://localhost:3000/api/items -H "Content-Type: application/json" -d '{"title":"Deneme","description":"açıklama"}'
+```
 
 Notlar
 - `PG_CONNECTION` ortam değişkeninin formatı: `postgresql://user:pass@host:port/dbname`
