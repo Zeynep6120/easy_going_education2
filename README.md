@@ -72,3 +72,13 @@ Continuous Integration (GitHub Actions)
 Notlar
 - `PG_CONNECTION` ortam değişkeninin formatı: `postgresql://user:pass@host:port/dbname`
 - Eğer `psql` veya `createdb` komutları yoksa, lokal PostgreSQL kurulumuna uygun adımları takip edin.
+
+Sunucu durdurma ve Postgres temizleme
+- Sunucuyu arka planda başlattıysanız durdurmak için:
+```bash
+./scripts/stop-server.sh
+```
+- Homebrew ile kurulmuş Postgres'i durdurmak veya kaldırmak isterseniz, öncelikle script'i okuyup çalıştırın:
+```bash
+./scripts/cleanup-postgres.sh
+```
