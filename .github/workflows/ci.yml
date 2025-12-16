@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: github
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: modul33db
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready -U github -d modul33db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Wait for Postgres
+        run: |
+          for i in $(seq 1 20); do
+            pg_isready -h localhost -p 5432 -U github && break || sleep 1
+          done
+
+      - name: Start server
+        env:
+          DATABASE_URL: postgresql://github:password@localhost:5432/modul33db
+          PORT: 3000
+        run: |
+          nohup npm start > server.log 2>&1 &
+          for i in $(seq 1 20); do
+            curl -sS http://localhost:3000/api/items && break || sleep 1
+          done
+          tail -n +1 server.log
+
+      - name: Run API tests
+        run: ./scripts/test-api.sh

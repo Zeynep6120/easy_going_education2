@@ -59,6 +59,16 @@ curl http://localhost:3000/api/items
 curl -X POST http://localhost:3000/api/items -H "Content-Type: application/json" -d '{"title":"Deneme","description":"açıklama"}'
 ```
 
+Test script
+- Proje içinde yer alan `scripts/test-api.sh` betiği basit bir end-to-end testi çalıştırır (GET, POST, DELETE).
+	Çalıştırmak için:
+	```bash
+	./scripts/test-api.sh
+	```
+
+Continuous Integration (GitHub Actions)
+- Bu repo için bir CI workflow eklendi: `.github/workflows/ci.yml`. Workflow push veya pull request olduğunda çalışır, bir Postgres servisi ayağa kaldırır, sunucuyu başlatır ve `scripts/test-api.sh`'i çalıştırır.
+
 Notlar
 - `PG_CONNECTION` ortam değişkeninin formatı: `postgresql://user:pass@host:port/dbname`
 - Eğer `psql` veya `createdb` komutları yoksa, lokal PostgreSQL kurulumuna uygun adımları takip edin.
